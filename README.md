@@ -164,3 +164,19 @@ wget -r -nH --cut-dirs=6 ftp://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/
 - `-nH` avoids the creation of a directory named after the server name;
 - `--cut-dirs=6` allows to put the content in the directory where you launch `wget`. The number 6 is used to filter out
   the 6-th components of the path.
+
+and rename the `tsv` file:
+```
+mv GRCh38-stratifications-v2.0.tsv GRCh38-stratifications-v2.0.tsv
+
+```
+
+Run the evaluations. For example, for chromosome 20, run:
+
+```
+zgrep chr20 GRCh38_notinalldifficultregions.bed.gz > GRCh38_notinalldifficultregions.chr20.bed
+bash vcf_evaluation.sh HG00438 grch38_chr20.pan.fa.c3d3224.7748b33.395c7f4.smooth.vcf.gz GRCh38_notinalldifficultregions.chr20.bed HG00438_eval_easy_regions 16
+
+zgrep chr20 GRCh38_alldifficultregions.bed.gz > GRCh38_alldifficultregions.chr20.bed
+bash vcf_evaluation.sh HG00438 grch38_chr20.pan.fa.c3d3224.7748b33.395c7f4.smooth.vcf.gz GRCh38_alldifficultregions.chr20.bed HG00438_eval_hard_regions 16
+```
