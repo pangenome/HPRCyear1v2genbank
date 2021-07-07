@@ -165,12 +165,6 @@ wget -r -nH --cut-dirs=6 ftp://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/
 - `--cut-dirs=6` allows to put the content in the directory where you launch `wget`. The number 6 is used to filter out
   the 6-th components of the path.
 
-and rename the `tsv` file:
-```
-mv GRCh38-stratifications-v2.0.tsv GRCh38-stratifications-v2.0.tsv
-
-```
-
 Run the evaluations. For example, for chromosome 20, run:
 
 ```
