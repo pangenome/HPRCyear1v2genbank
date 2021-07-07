@@ -128,11 +128,26 @@ We now apply [pggb](https://github.com/pangenome/pggb):
 
 ## evaluation
 
+Go in the `evaluation` directory:
+
+```
+cd evaluation
+```
+
 Download and prepare the reference:
 
 ```
 wget -c ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
 gunzip GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
+
+run_rtg=/home/tools/RealTimeGenomics/3.12/rtg
+$run_rtg format -o GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.sdf GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
+```
+
+Download the 'truth' set:
+
+```
+wget -c https://9a3fe.03c0.data.globus.org/benchmarking/original_vcfs/HG00438.GRCh38_no_alt.deepvariant.vcf.gz
 ```
 
 Download the easy/hard regions:
