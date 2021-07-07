@@ -126,4 +126,26 @@ We now apply [pggb](https://github.com/pangenome/pggb):
 ( echo A; echo S ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 ```
 
+## evaluation
 
+Download and prepare the reference:
+
+```
+wget -c ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
+gunzip GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
+```
+
+Download the easy/hard regions:
+
+```
+wget -c https://9a3fe.03c0.data.globus.org/benchmarking/dipcall_truth/pggb-burned/GRCh38_notinalldifficultregions.bed.gz
+wget -c https://9a3fe.03c0.data.globus.org/benchmarking/dipcall_truth/pggb-burned/GRCh38_alldifficultregions.bed.gz
+```
+
+Download the stratification files:
+```
+wget -r -nH --cut-dirs=6 ftp://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v2.0/GRCh38
+```
+- `-nH` avoids the creation of a directory named after the server name;
+- `--cut-dirs=6` allows to put the content in the directory where you launch `wget`. The number 6 is used to filter out
+  the 6-th components of the path.
