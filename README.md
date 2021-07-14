@@ -119,11 +119,11 @@ We now apply [pggb](https://github.com/pangenome/pggb):
 
 ```
 # nuclear chromosomes
-( seq 8; echo X; seq 9 22; echo Y ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+( seq 8; echo X; seq 9 22; echo Y ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -S -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 # chrM
-( echo M ) | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2/parts/chr'$i'.pan.fa -Y "#" -p 98 -s 1000 -l 3000 -n 70 -k 79 -B 10000000 -w 10000000 -G 10000 -v -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+( echo M ) | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -Y "#" -p 98 -s 1000 -l 3000 -n 70 -k 79 -B 10000000 -w 10000000 -G 10000 -v -S -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 # acrocentric / sex chromosome communities
-( echo A; echo S ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+( echo A; echo S ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -S -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 ```
 
 ## evaluation
