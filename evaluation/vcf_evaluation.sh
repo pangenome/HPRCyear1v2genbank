@@ -22,15 +22,17 @@ zcat "$QUERY_VCF" | sed 's/^grch38#//g' | bgzip -c > "$QUERY_VCF".renamed.vcf.gz
 echo "VCF processing"
 bash vcf_preprocess.sh "$QUERY_VCF".renamed.vcf.gz "$SAMPLE" 50
 rm "$QUERY_VCF".renamed.vcf.gz
-NORMALIZED_VCF="$QUERY_VCF".renamed.max50.chr1-22.vcf.gz
 
+FNAME=$(basename "$QUERY_VCF".renamed.vcf.gz)
+PREFIX="${FNAME%.vcf.gz}"
+NORMALIZED_VCF=${PREFIX}.max50.chr1-22.vcf.gz
 
 echo "VCF evaluation"
 mkdir -p "$OUTPUT_DIR"
 
 OUTPUT_PREFIX="$OUTPUT_DIR"/"$SAMPLE"
 
-docker run -it -v "${PWD}"/:/data paramost/hap.py /opt/hap.py/bin/hap.py \
+docker run -v "${PWD}"/:/data paramost/hap.py /opt/hap.py/bin/hap.py \
      --threads "$THREADS"                             \
      -r data/$REF                                     \
      -o data/"$OUTPUT_PREFIX"                         \
