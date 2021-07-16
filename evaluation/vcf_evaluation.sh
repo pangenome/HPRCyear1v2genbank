@@ -2,7 +2,6 @@
 
 # Variables
 REF=GCA_000001405.15_GRCh38_no_alt_analysis_set.fna
-STRATIFICATION_TSV=v2.0-GRCh38-stratifications.tsv
 REF_SDF=GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.sdf
 TRUTH_VCF=HG00438.GRCh38_no_alt.deepvariant.vcf.gz
 
@@ -11,8 +10,9 @@ TRUTH_VCF=HG00438.GRCh38_no_alt.deepvariant.vcf.gz
 SAMPLE=$1
 QUERY_VCF=$2
 REGIONS_BED=$3
-OUTPUT_DIR=$4
-THREADS=$5
+STRATIFICATION_TSV=$4
+OUTPUT_DIR=$5
+THREADS=$6
 
 
 echo "VCF renaming"

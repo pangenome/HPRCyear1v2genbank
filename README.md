@@ -147,15 +147,29 @@ $run_rtg format -o GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.sdf GCA_00000
 Download the 'truth' set:
 
 ```
-wget -c https://9a3fe.03c0.data.globus.org/benchmarking/original_vcfs/HG00438.GRCh38_no_alt.deepvariant.vcf.gz
+wget -c http://hypervolu.me/~guarracino/HPRC_variant_calling_evaluation/HG00438.GRCh38_no_alt.deepvariant.vcf.gz
 ```
 
+Download the Dipcall confident regions for the HG00438 sample:
+
+```
+wget -c http://hypervolu.me/~guarracino/HPRC_variant_calling_evaluation/HG00438.f1_assembly_v2.dip.bed
+```
+
+<!---
+```
+wget -c https://9a3fe.03c0.data.globus.org/benchmarking/original_vcfs/HG00438.GRCh38_no_alt.deepvariant.vcf.gz
+```
+-->
+
+<!---
 Download the easy/hard regions:
 
 ```
 wget -c https://9a3fe.03c0.data.globus.org/benchmarking/dipcall_truth/pggb-burned/GRCh38_notinalldifficultregions.bed.gz
 wget -c https://9a3fe.03c0.data.globus.org/benchmarking/dipcall_truth/pggb-burned/GRCh38_alldifficultregions.bed.gz
 ```
+-->
 
 Download the stratification files:
 ```
@@ -165,12 +179,12 @@ wget -r -nH --cut-dirs=6 ftp://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/
 - `--cut-dirs=6` allows to put the content in the directory where you launch `wget`. The number 6 is used to filter out
   the 6-th components of the path.
 
+
 Run the evaluations. For example, for chromosome 20, run:
 
 ```
-zgrep chr20 GRCh38_notinalldifficultregions.bed.gz > GRCh38_notinalldifficultregions.chr20.bed
-bash vcf_evaluation.sh HG00438 grch38_chr20.pan.fa.c3d3224.7748b33.395c7f4.smooth.vcf.gz GRCh38_notinalldifficultregions.chr20.bed HG00438_eval_easy_regions 16
+grep chr20 HG00438.f1_assembly_v2.dip.bed > HG00438.f1_assembly_v2.dip.chr20.bed
+grep union v2.0-GRCh38-stratifications.tsv | grep difficult > v2.0-GRCh38-stratifications.easy_hard.tsv
 
-zgrep chr20 GRCh38_alldifficultregions.bed.gz > GRCh38_alldifficultregions.chr20.bed
-bash vcf_evaluation.sh HG00438 grch38_chr20.pan.fa.c3d3224.7748b33.395c7f4.smooth.vcf.gz GRCh38_alldifficultregions.chr20.bed HG00438_eval_hard_regions 16
+bash vcf_evaluation.sh HG00438 chr20.pan.fa.c3d3224.7748b33.eb1aaa2.smooth.vcf.gz HG00438.f1_assembly_v2.dip.chr20.bed v2.0-GRCh38-stratifications.easy_hard.tsv HG00438_eval_out 16
 ```
