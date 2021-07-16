@@ -188,3 +188,5 @@ grep union v2.0-GRCh38-stratifications.tsv | grep difficult > v2.0-GRCh38-strati
 
 bash vcf_evaluation.sh HG00438 chr20.pan.fa.c3d3224.7748b33.eb1aaa2.smooth.vcf.gz HG00438.f1_assembly_v2.dip.chr20.bed v2.0-GRCh38-stratifications.easy_hard.tsv HG00438_eval_out 16
 ```
+
+The detailed results will be in the `HG00438_eval_out/HG00438.extended.csv` file.
