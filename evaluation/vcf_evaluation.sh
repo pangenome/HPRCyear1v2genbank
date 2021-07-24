@@ -42,3 +42,20 @@ rtg vcfeval \
     -c "$NORMALIZED_VCF" \
     -T "$THREADS" \
     -o "$OUTPUT_DIR".hard
+
+
+# (Un)hap.py evaluation
+#mkdir -p "$OUTPUT_DIR"
+#OUTPUT_PREFIX="$OUTPUT_DIR"/"$SAMPLE"
+#docker run -v "${PWD}"/:/data paramost/hap.py /opt/hap.py/bin/hap.py \
+#     --threads "$THREADS"                             \
+#     -r data/$REF                                     \
+#     -o data/"$OUTPUT_PREFIX"                         \
+#     -f data/"$REGIONS_BED"                           \
+#     --stratification data/"$STRATIFICATION_TSV"      \
+#     --no-leftshift                                   \
+#     --no-decompose                                   \
+#     --engine vcfeval                                 \
+#     --engine-vcfeval-template data/$REF_SDF          \
+#     data/$TRUTH_VCF                                  \
+#     data/"$NORMALIZED_VCF"
