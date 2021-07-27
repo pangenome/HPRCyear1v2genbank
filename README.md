@@ -119,11 +119,12 @@ We now apply [pggb](https://github.com/pangenome/pggb):
 
 ```
 # nuclear chromosomes
-( seq 8; echo X; seq 9 22; echo Y ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -S -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+( echo 2 3 4 5 6 7 8 X 9 10 11 12 13 14 15 17 18 19 20 21 22 Y | tr ' ' '\n') | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 24 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+# we separated out chr1 and chr16 due to high memory requirements during alignment
+echo 16 | while read i; do sbatch -p highmem -w octopus01 -c 40 --wrap 'hostname; cd /scratch && pggb -t 40 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 40 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+echo 1 | while read i; do sbatch -p highmem -w octopus02 -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 48 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 # chrM
-( echo M ) | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -Y "#" -p 98 -s 1000 -l 3000 -n 70 -k 79 -B 10000000 -w 10000000 -G 10000 -v -S -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
-# acrocentric / sex chromosome communities
-( echo A; echo S ) | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 70 -k 79 -B 10000000 -w 1000000 -G 6733,9929 -P 1,19,39,3,81,1 -v -S -L -o chr'$i'.pan -Z ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+echo M | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 1000 -l 3000 -n 70 -k 79 -w 10000000 -G 10000 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 ```
 
 ## evaluation
