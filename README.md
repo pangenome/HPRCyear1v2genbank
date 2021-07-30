@@ -124,7 +124,7 @@ We now apply [pggb](https://github.com/pangenome/pggb):
 echo 16 | while read i; do sbatch -p highmem -w octopus01 -c 40 --wrap 'hostname; cd /scratch && pggb -t 40 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 40 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 echo 1 | while read i; do sbatch -p highmem -w octopus02 -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 48 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 # chrM
-echo M | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 1000 -l 3000 -n 70 -k 79 -w 10000000 -G 10000 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+echo M | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 1000 -l 3000 -n 90 -k 79 -w 10000000 -G 10000 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
 ```
 
 ## evaluation
@@ -184,10 +184,9 @@ wget -r -nH --cut-dirs=6 ftp://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/
 Run the evaluations. For example, for chromosome 20, run:
 
 ```
-grep chr20 HG00438.f1_assembly_v2.dip.bed > HG00438.f1_assembly_v2.dip.chr20.bed
-grep union v2.0-GRCh38-stratifications.tsv | grep difficult > v2.0-GRCh38-stratifications.easy_hard.tsv
-
-bash vcf_evaluation.sh HG00438 chr20.pan.fa.c3d3224.7748b33.eb1aaa2.smooth.vcf.gz HG00438.f1_assembly_v2.dip.chr20.bed v2.0-GRCh38-stratifications.easy_hard.tsv HG00438_eval_out 16
+grep chr20 HG00438.f1_assembly_v2.dip.bed | bgzip > HG00438.f1_assembly_v2.dip.chr20.bed.gz
+tabix -p bed HG00438.f1_assembly_v2.dip.chr20.bed.gz
+./vcf_evaluation.sh HG00438 chr20.pan.fa.c3d3224.7748b33.eb1aaa2.smooth.vcf.gz HG00438.f1_assembly_v2.dip.chr20.bed.gz GRCh38_notinalldifficultregions.bed.gz GRCh38_alldifficultregions.bed.gz HG00438_eval_out 16
 ```
 
-The detailed results will be in the `HG00438_eval_out/HG00438.extended.csv` file.
+The detailed results will be in `HG00438_eval_out/`.
