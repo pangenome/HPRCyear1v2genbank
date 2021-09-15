@@ -3,7 +3,7 @@
 set -eo pipefail
 
 input=$1
-ref=$2
+ref_spec=$2
 threads=$3
 
 prefix=$(basename $input .gfa.gz)
@@ -25,12 +25,15 @@ echo "building the XG index for $gfa"
 xg=$prefix.xg
 TEMPDIR=$(pwd) $timer vg convert $gg -b $gbwt -t $threads -x >$xg
 
-echo "building VCF from $gfa and $gbwt"
-vcf=$prefix.vcf
-TEMPDIR=$(pwd) $timer vg deconstruct -a -P $ref -g $gbwt -t $threads $xg >$vcf
+for ref in $( echo "$ref_spec" | tr ',' ' ' );
+do
+    vcf=$prefix.$ref.vcf
+    echo "building VCF $vcf from $gfa and $gbwt"
+    TEMPDIR=$(pwd) $timer vg deconstruct -a -P $ref -g $gbwt -t $threads $xg >$vcf
+    pigz -p $threads $vcf
+done
 
 rm $gfa
-pigz -p $threads $vcf
 pigz -p $threads $gbwt
 pigz -p $threads $gg
 pigz -p $threads $xg
