@@ -1,5 +1,7 @@
 # build log
 
+## download and preprocessing
+
 Get the URLs of the assemblies:
 
 ```
@@ -52,6 +54,8 @@ rm HG02080.paternal.f1_assembly_v2_genbank.fa.fai
 ```
 
 Then we'll step into the directory below with `cd ..`.
+
+## partitioning by chromosome
 
 Partition the assembly contigs by chromosome by mapping each assembly against the scaffolded references, and then subsetting the graph. Here we use [wfmash](https://github.com/ekg/wfmash) for the mapping:
 
@@ -114,6 +118,8 @@ cat parts/chr{13,14,15,21,22}.pan.fa >parts/chrA.pan.fa && samtools faidx parts/
 ```
 
 This results in chromosome-specific FASTAs in `parts/chr*.pan.fa`.
+
+## graph building
 
 We now apply [pggb](https://github.com/pangenome/pggb):
 
