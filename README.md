@@ -124,14 +124,18 @@ This results in chromosome-specific FASTAs in `parts/chr*.pan.fa`.
 We now apply [pggb](https://github.com/pangenome/pggb):
 
 ```
-# nuclear chromosomes
-( echo 2 3 4 5 6 7 8 X 9 10 11 12 13 14 15 17 18 19 20 21 22 Y | tr ' ' '\n') | while read i; do sbatch -p lowmem -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 24 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
-# we separated out chr1 and chr16 due to high memory requirements during alignment
-echo 16 | while read i; do sbatch -p highmem -w octopus01 -c 40 --wrap 'hostname; cd /scratch && pggb -t 40 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 40 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
-echo 1 | while read i; do sbatch -p highmem -w octopus02 -c 48 --wrap 'hostname; cd /scratch && pggb -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 100000 -n 90 -k 229 -w 1092857 -G 13117,13219 -P 1,19,39,3,81,1 -T 48 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
-# chrM
-echo M | while read i; do sbatch -p lowmem -c 48 --wrap 'cd /scratch && pggb --resume -t 48 -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -p 98 -s 1000 -l 3000 -n 90 -k 79 -w 10000000 -G 10000 -U -v -L -V chm13:/lizardfs/erikg/HPRC/year1v2genbank/sample.names,grch38:/lizardfs/erikg/HPRC/year1v2genbank/sample.names -Z -o chr'$i'.pan ; mv /scratch/chr'$i'.pan '$(pwd); done >>pggb.jobids
+( echo 1 16 2 3 4 5 6 7 8 X 9 10 11 12 13 14 15 17 18 19 20 21 22 Y | tr ' ' '\n') \
+    | while read i; do sbatch -p workers -c 48 --wrap 'hostname; cd /scratch &&
+    /gnu/store/2mjiai3jvwgi4cdw0cmjzpl3g97lb8lr-pggb-0.2.0+531f85f-1/bin/pggb
+        -i /lizardfs/erikg/HPRC/year1v2genbank/parts/chr'$i'.pan.fa -o chr'$i'.pan
+        -t 48 -p 98 -s 100000 -n 90 -k 311 -O 0.03 -T 48
+        -U -v -L -V chm13:#,grch38:# -Z ; mv /scratch/chr'$i'.pan '$(pwd);
+    done >>pggb.jobids
 ```
+
+Note that, for clarity, the command line given in quotes has been broken across multiple lines, which may cause problems if it is copied and pasted without editing.
+
+A slightly different command line is used for the mitochondria, specifically we set `-s 1000` to improve sensitivity in this short chromosome.
 
 ## evaluation
 
