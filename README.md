@@ -226,8 +226,7 @@ RUN_ODGI=/home/guarracino/tools/odgi/bin/odgi-ed9390a47e6b029a753cbb83b29945eb48
 mkdir -p /lizardfs/guarracino/HPRC/confident_variants/
 cd /lizardfs/guarracino/HPRC/confident_variants/
 
-# 
-( seq 1 22; echo X; echo Y) | while read i; do
+( seq 1 22; echo X) | while read i; do
   echo chr$i
   
   mkdir -p chr$i
@@ -261,7 +260,7 @@ done
 Call variants:
 
 ```shell
-( seq 1 22; echo X; echo Y) | while read i; do
+( seq 1 22; echo X) | while read i; do
   PATH_GRAPH_OG_GZ=/lizardfs/erikg/HPRC/year1v2genbank/wgg.88/chr$i.pan/chr$i.pan.fa.a2fb268.4030258.6a1ecc2.smooth.og.gz
   PREFIX=$(basename $PATH_GRAPH_OG_GZ .og.gz)
 
