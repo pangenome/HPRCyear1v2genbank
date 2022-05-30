@@ -6,18 +6,26 @@ Prepare tools:
 ```shell
 git clone --recursive https://github.com/pangenome/odgi.git
 cd odgi
-git checkout ed9390a47e6b029a753cbb83b29945eb48ca5c3b
+git checkout 120284fda67b3f3a67e8879c6ce7923923224f4f
 cmake -H. -Bbuild && cmake --build build -- -j 48
-mv bin/odgi bin/odgi-ed9390a47e6b029a753cbb83b29945eb48ca5c3b
+mv bin/odgi bin/odgi-120284fda67b3f3a67e8879c6ce7923923224f4f
+```
 
-vg version
-#vg version v1.40.0 "Suardi"
+Download and prepare unreliable regions (info at this [link](https://github.com/human-pangenomics/hpp_production_workflows/blob/asset/coverage/README.md#components)):
+
+```shell
+mkdir -p /lizardfs/guarracino/HPRC/annotations/unreliable/
+cd /lizardfs/guarracino/HPRC/annotations/unreliable/
+
+cut -f 1 -d '#' /lizardfs/erikg/HPRC/year1v2genbank/assemblies/hprcy1v2genbank.genomes.combined.fai | grep 'chm13\|grch38' -v | sort | uniq | while read SAMPLE; do
+  wget -c https://s3-us-west-2.amazonaws.com/human-pangenomics/submissions/e9ad8022-1b30-11ec-ab04-0a13c5208311--COVERAGE_ANALYSIS_Y1_GENBANK/FLAGGER/APR_08_2022/FINAL_HIFI_BASED/FLAGGER_HIFI_ASM_SIMPLIFIED_BEDS/$SAMPLE/$SAMPLE.hifi.flagger_final.simplified.unreliable_only.bed
+done
 ```
 
 Prepare reliable graphs:
 
 ```shell
-RUN_ODGI=/home/guarracino/tools/odgi/bin/odgi-ed9390a47e6b029a753cbb83b29945eb48ca5c3b
+RUN_ODGI=/home/guarracino/tools/odgi/bin/odgi-120284fda67b3f3a67e8879c6ce7923923224f4f
 
 mkdir -p /lizardfs/guarracino/HPRC/confident_variants/
 cd /lizardfs/guarracino/HPRC/confident_variants/
@@ -35,7 +43,7 @@ cd /lizardfs/guarracino/HPRC/confident_variants/
   $RUN_ODGI paths -i <(zcat $PATH_GRAPH_OG_GZ) --list-paths --list-path-start-end > $PREFIX.paths.tsv
 
   # Take unreliable regions for the paths present in the input graph
-  cat /lizardfs/erikg/HPRC/year1v2genbank/annotations/unreliable/*.hifi.flagger_final.bed | \
+  cat /lizardfs/guarracino/HPRC/annotations/unreliable/*.hifi.flagger_final.simplified.unreliable_only.bed | \
     grep -f <(grep chr -v $PREFIX.paths.tsv | cut -f 1) | bedtools sort > $PREFIX.unreliable.bed
 
   # Take the complement of the unreliable regions, obtaining the reliable regions
@@ -60,7 +68,8 @@ Call variants:
   PATH_GRAPH_OG_GZ=/lizardfs/erikg/HPRC/year1v2genbank/wgg.88/chr$i.pan/chr$i.pan.fa.a2fb268.4030258.6a1ecc2.smooth.og.gz
   PREFIX=$(basename $PATH_GRAPH_OG_GZ .og.gz)
 
-  sbatch -p workers -c 24 --wrap "\time -v vg deconstruct -P chm13 -H '#' -e -a -t 24 /lizardfs/guarracino/HPRC/confident_variants/chr$i/$PREFIX.reliable.gfa | bgzip -c -@ 24 > $PREFIX.reliable.vcf.gz && tabix $PREFIX.reliable.vcf.gz && mv $PREFIX.reliable.vcf.gz* /lizardfs/guarracino/HPRC/confident_variants/chr$i/"
+  sbatch -p workers -c 24 --wrap "hostname; cd /scratch; \time -v vg-1.36.0 deconstruct -P chm13 -H '#' -e -a -t 24 /lizardfs/guarracino/HPRC/confident_variants/chr$i/$PREFIX.reliable.gfa | bgzip -c -@ 24 > $PREFIX.reliable.vcf.gz && tabix $PREFIX.reliable.vcf.gz && mv $PREFIX.reliable.vcf.gz* /lizardfs/guarracino/HPRC/confident_variants/chr$i/"
+  sbatch -p workers -c 24 --wrap "hostname; cd /scratch; \time -v vg-1.40.0 deconstruct -P chm13 -H '#' -e -a -t 24 /lizardfs/guarracino/HPRC/confident_variants/chr$i/$PREFIX.reliable.gfa | bgzip -c -@ 24 > $PREFIX.reliable.vg_1_40_0.vcf.gz && tabix $PREFIX.reliable.vg_1_40_0.vcf.gz && mv $PREFIX.reliable.vg_1_40_0.vcf.gz* /lizardfs/guarracino/HPRC/confident_variants/chr$i/"
 done
 ```
 
