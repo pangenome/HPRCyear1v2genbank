@@ -137,6 +137,9 @@ Note that, for clarity, the command line given in quotes has been broken across 
 
 A slightly different command line is used for the mitochondria, specifically we set `-s 1000` to improve sensitivity in this short chromosome.
 
+**DOWNLOAD THE GRAPHS:** you can find the resulting graphs in GFA format [here](https://s3-us-west-2.amazonaws.com/human-pangenomics/pangenomes/freeze/freeze1/pggb/hprc-v1.0-pggb.gfa.gz).
+More information and other files are available [here](https://github.com/human-pangenomics/hpp_pangenome_resources#pggb).
+
 ## evaluation
 
 Go in the `evaluation` directory:
